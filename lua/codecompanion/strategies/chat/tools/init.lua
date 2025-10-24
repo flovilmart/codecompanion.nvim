@@ -238,13 +238,20 @@ function Tools:set_autocmds()
           if vim.g.codecompanion_yolo_mode then
             return auto_submit()
           end
+          if self.always_submit then
+            log:debug("[Tools] Auto-submitting always_submit")
+            return auto_submit()
+          end
           if self.status == CONSTANTS.STATUS_ERROR and self.tools_config.opts.auto_submit_errors then
+            log:debug("[Tools] Auto-submitting on success")
             return auto_submit()
           end
           if self.status == CONSTANTS.STATUS_SUCCESS and self.tools_config.opts.auto_submit_success then
+            log:debug("[Tools] Auto-submitting on success")
             return auto_submit()
           end
 
+          log:debug("[Tools] Reset - no submit")
           self:reset({ auto_submit = false })
         end)
       end
@@ -259,6 +266,7 @@ end
 function Tools:execute(chat, tools)
   local id = math.random(10000000)
   self.chat = chat
+  self.always_submit = chat.adapter.opts.tools_opts and chat.adapter.opts.tools_opts.always_submit
 
   -- Start edit tracking for all tools
   self:_start_edit_tracking(tools)

@@ -15,6 +15,7 @@ return {
     stream = true,
     vision = true,
     tools = true,
+    tools_opts = { always_submit = true }
   },
   features = {
     text = true,
